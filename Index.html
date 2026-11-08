@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscrições ENEM 2026 · Transporte · Santa Maria/RN</title>
+<style>
+  :root {
+    --stormy-teal: #006d77;
+    --pearl-aqua: #83c5be;
+    --alice-blue: #edf6f9;
+    --ink: #000;
+    --paper: #fff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Arial, system-ui, sans-serif;
+    background: var(--alice-blue);
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  header {
+    background: var(--stormy-teal);
+    color: var(--paper);
+    border-bottom: 5px solid var(--ink);
+    padding: 24px 16px;
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: clamp(1.5rem, 4vw, 2.4rem);
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+  header p { margin: 0; font-weight: 700; opacity: 0.95; }
+
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 16px 48px;
+  }
+
+  .box {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  /* Estatísticas */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .stat { padding: 12px 14px; }
+  .stat .num { font-size: 2rem; font-weight: 900; line-height: 1; }
+  .stat .lbl { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-top: 6px; }
+  .stat.total { background: var(--pearl-aqua); }
+
+  /* Controles */
+  .controls {
+    padding: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .controls label { font-weight: 900; text-transform: uppercase; font-size: 0.85rem; }
+  input[type="search"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 3px solid var(--ink);
+    border-radius: 0;
+    background: var(--paper);
+    outline: none;
+  }
+  input[type="search"]:focus {
+    background: var(--alice-blue);
+    box-shadow: 4px 4px 0 var(--stormy-teal);
+  }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    font-family: inherit;
+    font-weight: 900;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    background: var(--paper);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    cursor: pointer;
+  }
+  .chip:hover { background: var(--pearl-aqua); }
+  .chip:active { transform: translate(3px, 3px); box-shadow: none; }
+  .chip[aria-pressed="true"] { background: var(--stormy-teal); color: var(--paper); }
+  .chip:focus-visible { outline: 3px dashed var(--stormy-teal); outline-offset: 3px; }
+
+  .status {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  /* Localidades */
+  details.local {
+    margin-bottom: 20px;
+  }
+  details.local > summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--pearl-aqua);
+    border-bottom: 3px solid var(--ink);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  details.local > summary::-webkit-details-marker { display: none; }
+  details.local > summary::after {
+    content: "−";
+    font-size: 1.4rem;
+    margin-left: 8px;
+  }
+  details.local:not([open]) > summary::after { content: "+"; }
+  details.local > summary:hover { background: #74b8b1; }
+  details.local > summary:focus-visible { outline: 3px dashed var(--ink); outline-offset: -8px; }
+
+  .cnt {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 10px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .grupo { padding: 14px 16px; border-bottom: 2px solid var(--ink); }
+  .grupo:last-child { border-bottom: none; }
+  .grupo h3 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px;
+    font-size: 1rem;
+    font-weight: 900;
+  }
+
+  ul { list-style: none; margin: 0; padding: 0; }
+  li {
+    padding: 8px 10px;
+    border: 2px solid var(--ink);
+    margin-bottom: 8px;
+    background: var(--paper);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+  li:nth-child(even) { background: var(--alice-blue); }
+
+  /* Tags de tipo de escola */
+  .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 2px solid var(--ink);
+    white-space: nowrap;
+  }
+  .t-federal { background: var(--stormy-teal); color: var(--paper); }
+  .t-municipal { background: var(--pearl-aqua); color: var(--ink); }
+  .t-estadual { background: var(--alice-blue); color: var(--ink); }
+  .t-privada { background: var(--paper); color: var(--ink); border-style: dashed; }
+  .menor { background: var(--ink); color: var(--paper); }
+
+  .empty {
+    padding: 32px 16px;
+    text-align: center;
+  }
+  .empty p { font-weight: 700; font-size: 1.1rem; margin: 0 0 16px; }
+  .btn {
+    font-family: inherit;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    background: var(--stormy-teal);
+    color: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    cursor: pointer;
+  }
+  .btn:active { transform: translate(4px, 4px); box-shadow: none; }
+
+  footer {
+    margin-top: 32px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--stormy-teal);
+  }
+
+  @media (max-width: 520px) {
+    .box { box-shadow: 4px 4px 0 var(--ink); }
+    details.local > summary { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Inscrições ENEM 2026 · Transporte</h1>
+  <p>Quem faz a prova em cada escola, agrupado por localidade de residência</p>
+</header>
+
+<main>
+
+  <section class="stats" aria-label="Resumo">
+    <div class="box stat total"><div class="num" id="st-total">0</div><div class="lbl">Inscritos</div></div>
+    <div class="box stat"><div class="num" id="st-federal">0</div><div class="lbl">Federal (IFRN)</div></div>
+    <div class="box stat"><div class="num" id="st-municipal">0</div><div class="lbl">Municipal</div></div>
+    <div class="box stat"><div class="num" id="st-estadual">0</div><div class="lbl">Estadual</div></div>
+    <div class="box stat"><div class="num" id="st-privada">0</div><div class="lbl">Privada</div></div>
+  </section>
+
+  <section class="box controls" aria-label="Busca e filtros">
+    <div>
+      <label for="busca">Buscar por nome, localidade ou escola</label>
+      <input type="search" id="busca" placeholder="Ex.: Jurumenha, Gessica, Djalma Marinho…" autocomplete="off">
+    </div>
+    <div>
+      <div class="filters" role="group" aria-label="Filtrar por tipo de escola">
+        <button class="chip" data-tipo="todos" aria-pressed="true">Todas</button>
+        <button class="chip" data-tipo="federal" aria-pressed="false">Federal</button>
+        <button class="chip" data-tipo="municipal" aria-pressed="false">Municipal</button>
+        <button class="chip" data-tipo="estadual" aria-pressed="false">Estadual</button>
+        <button class="chip" data-tipo="privada" aria-pressed="false">Privada</button>
+      </div>
+    </div>
+    <p class="status" id="status" aria-live="polite"></p>
+  </section>
+
+  <div id="lista" aria-live="polite"></div>
+
+  <footer>
+    Fonte: formulário de inscrições ENEM 2026 · Transporte · Santa Maria/RN (29/10 a 07/11/2026)
+  </footer>
+
+</main>
+
+<script>
+  // Escolas e seus tipos
+  const ESCOLAS = {
+    ifrn:      { nome: "IFRN – Campus São Paulo do Potengi", tipo: "federal" },
+    djalma:    { nome: "E.M. Djalma Marinho",                tipo: "municipal" },
+    luis:      { nome: "E.M. Luis Antônio",                  tipo: "municipal" },
+    mauricio:  { nome: "E.E. Maurício Freire",               tipo: "estadual" },
+    sf:        { nome: "Colégio São Francisco",              tipo: "privada" }
+  };
+
+  const TIPO_LBL = { federal: "Federal", municipal: "Municipal", estadual: "Estadual", privada: "Privada" };
+
+  // Dados por localidade. Nomes com * são menores de 18 anos.
+  const DADOS = [
+    {
+      local: "Santa Maria (sede)",
+      ifrn: [
+        "Luiz Fabiano Barbosa Fernandes", "Rosely Sales de Medeiros", "Maria da Luz Silvestre Almeida",
+        "Luiz Augusto Macedo Dantas", "José Victor Emiliano da Silva", "Lucas Mateus Costa da Silva",
+        "Felipe Augusto Brito de Oliveira", "João Alysson Trajano Roberto", "Lívia Gabrielle Alves dos Santos*",
+        "Thalyson Steverson Pereira", "Fernanda Graziela da Silva Araujo", "Maria Willane Conceição da Silva",
+        "Ana Beatriz da Silva Lima", "Iara Carliana da Silva Ferreira", "Maria Gabriely",
+        "Relysson Luan da Silva Ferreira", "Maria Eduarda Silva Lopes", "Caio Bruno Câmara Ambrósio",
+        "Carliane Teixeira dos Santos", "Carlos Henrique da Silva", "Janckylian Gomes de Souza",
+        "Guilherme de Souza Gomes", "José Eldher da Silva Vicente", "Janny Nunes da Silva",
+        "Lui Eduardo Alves Macedo", "Vanessa Camilly Oliveira da Silva", "Iarley Faustino Xavier",
+        "Bianca Luiza Ferreira", "Daniele Reginaldo Gomes da Silva", "Renata Thawane dos Santos Moura*",
+        "Andrielison Paulino*", "Geovanna Mairys Silva de Araújo*", "Francisca Gleiciely da Costa Brito*",
+        "Daiane Pinheiro Aliandro", "Eloah Marttely Silva Fernandes*", "Kleysom de Oliveira Melo",
+        "Bianca Natally Batista Basilio*", "Maria Adailza Araújo da Silva*", "Eloíse Nayara Pinto Costa*",
+        "Gilberto Santos da Silva", "Anny Carolline Oliveira Costa", "Olavo Araújo dos Santos*",
+        "Fabrício Israel Cruz de Lima", "Estacey Lavínia Câmara de Medeiros", "Cleber Amaro Abrantes",
+        "Joanderson De Oliveira Santos", "Jonathan Pereira Jorge*", "Kaliny Tatiany Gomes Gonçalves",
+        "Yasmim Lifanny da Silva*", "Humberto Machado de Souza", "Ana Rafaele de Lima Silva",
+        "Joana Darc Coutinho da Silva", "Josialysson Trajano*", "Edivania Silva", "Marcos Daniel da Silva Rodrigues"
+      ],
+      djalma: [
+        "Flavio Fernando de Oliveira", "Matheus Alexandre Silva*", "Emilly Laviny Silva Alves*",
+        "Joylton da Silva Melo*", "Ana Luiza Silvestre da Silva", "Evelyn Vitória Martins da Silva",
+        "Ana Beatriz da Silva Costa", "Douglas Isaias Lopes Cardoso", "Eduardo Augusto Albuquerque Martins",
+        "Francisco Breno Alves da Silva", "Renato Fernandes Da Silva", "João Victor Zeba",
+        "Ana Eloiza Franco da Silva", "Bianca Ticyane Alves Araújo", "Nataly Nicolly da Cunha Silva*",
+        "Douglas Adenildo Brito da Câmara*", "José Rafael Franco da Silva", "José Edmilson de Araújo Vicente",
+        "Luiz Fernando Dias Nunes*", "Richalyson do Nascimento Barbosa", "Ana Beatriz Marques de Aquino",
+        "Tamires Nunes", "Vitor Arthur Lopes de Lucena*", "Aryanne Allana Araújo Gomes*",
+        "Jaqueline de Oliveira Silva*", "Francisco Guilherme Oliveira da Silva"
+      ],
+      luis: ["Larissa Marques", "Arthur Felipe Gomes da Silva*", "Ismael Fabio Dias*"],
+      mauricio: ["Fátima Mirelly do Nascimento Barbosa", "Yasmim Beatriz Dias Rocha*"],
+      sf: [
+        "Letícia da Silva Gomes", "Maria Luiza Lima da Cruz", "Maria Isabel Lima da Cruz",
+        "Pedro Henrique de Sousa", "Eduardo Mauricio de Oliveira", "Daniela Bezerra",
+        "Hudjudyson Patricio Brito", "José Ivan da Fonseca Filho", "Deivison Deymon Moreira Macedo",
+        "Alexsandro dos Santos Silva Júnior", "Letícia Nayane de Lima Freitas", "José Jefferson de Medeiros",
+        "Josinaldo Aires da Rocha Filho", "Victor Gabriel Pinheiro Dias", "Isabel Natchelly Freitas dos Santos",
+        "Gabrieli Bezerra de Medeiros*"
+      ]
+    },
+    {
+      local: "Vila Tota Azevedo",
+      ifrn: ["Júlio César da Silva", "Samuel Levi da Silva Teixeira*", "Gabriela Dias Ferreira*"],
+      djalma: ["Renilson Marcionilo da Silva", "Francisco Maickon Braz Silva", "Maria Eduarda Oliveira"],
+      luis: ["Jefferson Gomes Barreto"],
+      sf: ["Artur Felipe de Souza Damascena"]
+    },
+    {
+      local: "Caiçara",
+      ifrn: ["Yslaine", "Douglas Weslley de Melo Rocha*"],
+      djalma: ["Maria Judeane da Silva Santos", "Gustavo Cardoso da Câmara", "Maria Luiza Câmara do Nascimento"]
+    },
+    {
+      local: "Jurumenha",
+      ifrn: ["Yasmin Mikely Costa do Nascimento", "Willian Matheus Alves de Lima*", "Gessica Santos de Oliveira", "Manuely do Nascimento Evangelista"]
+    },
+    {
+      local: "Lagoa do Sobrado",
+      ifrn: ["Francisca Jailsa Nunes da Silva", "Ingrid Rayane Lima Martins"],
+      sf: ["Francisco Judson Nunes da Silva", "Adalgisa Nunes da Silva"]
+    },
+    {
+      local: "Santa Maria da Mata",
+      ifrn: ["Fábio Gutemberg Oliveira da Silva"],
+      luis: ["José Eduardo Oliveira da Silva*"]
+    },
+    {
+      local: "Campos Novos",
+      ifrn: ["Maria Letícia Amaro"],
+      djalma: ["Williany Vitória Mendes Graciano"]
+    },
+    {
+      local: "Bancos (zona rural)",
+      ifrn: ["Juliana de Souza Emiliano*"]
+    },
+    {
+      local: "Povoado Lagoa Grande",
+      sf: ["Joicy Carvalho da Silva*"]
+    },
+    {
+      local: "Sítio Telha B",
+      ifrn: ["Nathalia Mileni Cordeiro da Silva"]
+    }
+  ];
+
+  // Achata os dados em uma lista de alunos
+  const ALUNOS = [];
+  DADOS.forEach(loc => {
+    Object.keys(ESCOLAS).forEach(chave => {
+      (loc[chave] || []).forEach(raw => {
+        ALUNOS.push({
+          local: loc.local,
+          escola: chave,
+          nome: raw.replace(/\*$/, ""),
+          menor: raw.endsWith("*")
+        });
+      });
+    });
+  });
+
+  const state = { q: "", tipo: "todos" };
+
+  const els = {
+    busca: document.getElementById("busca"),
+    lista: document.getElementById("lista"),
+    status: document.getElementById("status"),
+    chips: document.querySelectorAll(".chip")
+  };
+
+  function esc(s) {
+    return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function norm(s) {
+    return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
+  function passaFiltro(a) {
+    const esc_ = ESCOLAS[a.escola];
+    if (state.tipo !== "todos" && esc_.tipo !== state.tipo) return false;
+    if (state.q) {
+      const texto = norm(`${a.nome} ${a.local} ${esc_.nome}`);
+      return texto.includes(norm(state.q.trim()));
+    }
+    return true;
+  }
+
+  function atualizarEstatisticas() {
+    const cont = { federal: 0, municipal: 0, estadual: 0, privada: 0 };
+    ALUNOS.forEach(a => cont[ESCOLAS[a.escola].tipo]++);
+    document.getElementById("st-total").textContent = ALUNOS.length;
+    document.getElementById("st-federal").textContent = cont.federal;
+    document.getElementById("st-municipal").textContent = cont.municipal;
+    document.getElementById("st-estadual").textContent = cont.estadual;
+    document.getElementById("st-privada").textContent = cont.privada;
+  }
+
+  function render() {
+    const visiveis = ALUNOS.filter(passaFiltro);
+
+    const html = DADOS.map(loc => {
+      const alunos = visiveis.filter(a => a.local === loc.local);
+      if (!alunos.length) return "";
+
+      const grupos = Object.keys(ESCOLAS).map(chave => {
+        const lista = alunos.filter(a => a.escola === chave);
+        if (!lista.length) return "";
+        const info = ESCOLAS[chave];
+        const itens = lista.map(a =>
+          `<li>${esc(a.nome)}${a.menor ? ' <span class="tag menor">menor de 18</span>' : ""}</li>`
+        ).join("");
+        return `
+          <div class="grupo">
+            <h3>
+              <span class="tag t-${info.tipo}">${TIPO_LBL[info.tipo]}</span>
+              ${esc(info.nome)}
+              <span class="cnt">${lista.length}</span>
+            </h3>
+            <ul>${itens}</ul>
+          </div>`;
+      }).join("");
+
+      return `
+        <details class="local" open>
+          <summary>
+            <span>${esc(loc.local)}</span>
+            <span class="cnt">${alunos.length}</span>
+          </summary>
+          ${grupos}
+        </details>`;
+    }).join("");
+
+    if (html.trim()) {
+      els.lista.innerHTML = html;
+    } else {
+      els.lista.innerHTML = `
+        <div class="box empty">
+          <p>Nenhum inscrito encontrado com esses filtros.</p>
+          <button class="btn" id="limpar">Limpar filtros</button>
+        </div>`;
+      document.getElementById("limpar").addEventListener("click", limparFiltros);
+    }
+
+    els.status.textContent = `Mostrando ${visiveis.length} de ${ALUNOS.length} inscritos`;
+  }
+
+  function limparFiltros() {
+    state.q = "";
+    state.tipo = "todos";
+    els.busca.value = "";
+    els.chips.forEach(c => c.setAttribute("aria-pressed", c.dataset.tipo === "todos" ? "true" : "false"));
+    render();
+  }
+
+  els.busca.addEventListener("input", e => {
+    state.q = e.target.value;
+    render();
+  });
+
+  els.chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      state.tipo = chip.dataset.tipo;
+      els.chips.forEach(c => c.setAttribute("aria-pressed", c === chip ? "true" : "false"));
+      render();
+    });
+  });
+
+  atualizarEstatisticas();
+  render();
+</script>
+</body>
+</html>
